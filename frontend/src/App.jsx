@@ -256,7 +256,7 @@ function App() {
 
               <div className="flex items-center gap-3 pt-2">
                 <input type="checkbox" id="reminder" checked={newEvent.reminderEnabled} onChange={e => setNewEvent({...newEvent, reminderEnabled: e.target.checked})} className="w-4 h-4 rounded border-dark-700 text-primary-500 focus:ring-primary-500 focus:ring-offset-dark-800 bg-dark-900" />
-                <label htmlFor="reminder" className="text-sm font-medium text-gray-300">Enable Email Reminder (15 mins before)</label>
+                <label htmlFor="reminder" className="text-sm font-medium text-gray-300">Enable Email Reminder (30 mins before)</label>
               </div>
 
               <div className="flex gap-3 pt-4">
