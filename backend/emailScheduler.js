@@ -63,10 +63,10 @@ cron.schedule('* * * * *', () => {
 
                 const htmlContent = `
                     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #1f2937; color: #f3f4f6; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                        <h2 style="color: #60a5fa; border-bottom: 1px solid #374151; padding-bottom: 15px; margin-top: 0;">📅 Reminder: ${event.title}</h2>
+                        <h2 style="color: #60a5fa; border-bottom: 1px solid #374151; padding-bottom: 15px; margin-top: 0;">Reminder: ${event.title}</h2>
                         <p style="font-size: 16px;">Hello,</p>
                         <p style="font-size: 16px;">This is a reminder that you have a <strong>${event.type}</strong> for <strong>${event.title}</strong> starting at <strong>${event.startTime}</strong>.</p>
-                        <p style="font-size: 16px; background: #111827; padding: 12px; border-radius: 8px;"><strong>📍 Location:</strong> ${event.location || 'N/A'}</p>
+                        <p style="font-size: 16px; background: #111827; padding: 12px; border-radius: 8px;"><strong>Location:</strong> ${event.location || 'N/A'}</p>
                         
                         <div style="margin-top: 30px; padding: 20px; background: #374151; border-left: 5px solid #3b82f6; border-radius: 4px;">
                             <p style="font-size: 16px; font-style: italic; margin: 0; color: #d1d5db; line-height: 1.5;">${motivation}</p>
