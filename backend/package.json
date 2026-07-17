@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node seed.js && node server.js",
+    "postinstall": "npm rebuild sqlite3",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
