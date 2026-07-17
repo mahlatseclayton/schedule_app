@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { format, addDays, startOfWeek, isBefore, isSameDay, parseISO } from 'date-fns';
 import { ChevronLeft, ChevronRight, Plus, Clock, BookOpen, Briefcase, Trash2, Bell, Filter } from 'lucide-react';
@@ -9,6 +9,7 @@ function App() {
   const [events, setEvents] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [viewMode, setViewMode] = useState('Combined'); // Combined, Work, School
+  const todayRef = useRef(null);
   
   // Week tracking
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -28,8 +29,15 @@ function App() {
     reminderEnabled: true 
   });
 
+  const scrollToToday = () => {
+    setTimeout(() => {
+      todayRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  };
+
   useEffect(() => {
     fetchEvents();
+    scrollToToday();
   }, []);
 
   const fetchEvents = async () => {
@@ -72,7 +80,10 @@ function App() {
   // Navigate weeks
   const nextWeek = () => setCurrentDate(addDays(currentDate, 7));
   const prevWeek = () => setCurrentDate(addDays(currentDate, -7));
-  const goToToday = () => setCurrentDate(new Date());
+  const goToToday = () => {
+    setCurrentDate(new Date());
+    scrollToToday();
+  };
 
   // Analytics for the currently viewed week
   const weekDatesStr = weekDays.map(d => format(d, 'yyyy-MM-dd'));
@@ -154,7 +165,7 @@ function App() {
             }).sort((a,b) => a.startTime.localeCompare(b.startTime));
 
             return (
-              <div key={dateStr} className="flex flex-col gap-3">
+              <div key={dateStr} ref={isToday ? todayRef : null} className="flex flex-col gap-3">
                 <div className={`text-center pb-2 border-b-2 ${isToday ? 'border-primary-500' : 'border-dark-700'}`}>
                   <p className={`text-sm font-bold ${isToday ? 'text-primary-400' : 'text-gray-400'}`}>{format(dayObj, 'EEEE')}</p>
                   <p className={`text-xs ${isToday ? 'text-primary-300 font-semibold' : 'text-gray-500'}`}>{format(dayObj, 'MMM d')}</p>
