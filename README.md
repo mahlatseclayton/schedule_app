@@ -20,7 +20,7 @@ This project is fully custom-built and heavily optimized:
 - **Database:** SQLite (persisted via `schedule.sqlite`).
 - **Automation:** `node-cron` and `nodemailer` for the reminder system.
 
-## Setup Instructions
+## Local Setup Instructions
 
 1. **Backend Initialization:**
    ```bash
@@ -36,6 +36,30 @@ This project is fully custom-built and heavily optimized:
    npm install
    npm run dev
    ```
+
+## CI/CD Deployment Guide
+
+This project is configured with continuous deployment.
+
+### Frontend (GitHub Pages)
+1. Go to your repository **Settings** > **Pages**.
+2. Set the Source to **GitHub Actions**.
+3. Every push to the `main` branch will automatically build and deploy the frontend to `https://mahlatseclayton.github.io/schedule_app/`.
+
+### Backend (Render)
+1. Log in to [Render](https://render.com) and click **New > Web Service**.
+2. Connect your GitHub repository.
+3. Configure the service:
+   - **Root Directory:** `backend`
+   - **Build Command:** `npm install`
+   - **Start Command:** `npm start`
+4. Add your **Environment Variables** in the Render dashboard:
+   - `ADMIN_PIN`
+   - `EMAIL_USER`
+   - `EMAIL_PASS`
+5. *(Optional but Recommended)* Render's free tier uses ephemeral storage, which wipes `schedule.sqlite` on every deployment. To prevent data loss on restarts, attach a persistent disk to the Render service.
+
+> **Note:** To connect the Frontend to the Render Backend, add `VITE_API_URL=https://<your-render-url>/api/events` to your frontend's environment or directly in the repository secrets if using a custom build action.
 
 ## Workflow & Constraints
 - Wake-up time is 6:00 AM on weekdays, allowing early-morning QA work.

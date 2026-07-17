@@ -3,7 +3,7 @@ import axios from 'axios';
 import { format, addDays, startOfWeek, isBefore, isSameDay, parseISO } from 'date-fns';
 import { ChevronLeft, ChevronRight, Plus, Clock, BookOpen, Briefcase, Trash2, Bell, Filter } from 'lucide-react';
 
-const API_URL = 'http://localhost:3001/api/events';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api/events';
 
 function App() {
   const [events, setEvents] = useState([]);
