@@ -1,7 +1,7 @@
 import React from 'react';
 import { addDays, format } from 'date-fns';
 
-const PrintableTimetable = React.forwardRef(({ events, weekStart, viewMode }, ref) => {
+const PrintableTimetable = React.forwardRef(({ events, weekStart, viewMode, theme = 'Soft Gray' }, ref) => {
   const weekDays = Array.from({ length: 7 }).map((_, i) => addDays(weekStart, i));
   
   // Find min and max hours dynamically based on events
@@ -21,8 +21,8 @@ const PrintableTimetable = React.forwardRef(({ events, weekStart, viewMode }, re
   const hoursCount = maxHour - minHour;
   const hours = Array.from({ length: hoursCount + 1 }).map((_, i) => i + minHour); 
 
-  const PIXELS_PER_HOUR = 70;
-  const HEADER_HEIGHT = 40;
+  const PIXELS_PER_HOUR = 120;
+  const HEADER_HEIGHT = 50;
 
   // Helper to calculate position and height for an event
   const getEventStyle = (startTime, endTime) => {
@@ -52,8 +52,17 @@ const PrintableTimetable = React.forwardRef(({ events, weekStart, viewMode }, re
     }
   };
 
+  const getThemeBg = () => {
+    switch (theme) {
+      case 'White': return 'bg-white';
+      case 'Warm Sand': return 'bg-stone-50';
+      case 'Soft Gray': 
+      default: return 'bg-slate-50';
+    }
+  };
+
   return (
-    <div ref={ref} className="bg-white text-black p-10 w-[1400px]" style={{ fontFamily: 'sans-serif' }}>
+    <div ref={ref} className={`${getThemeBg()} text-black p-10 w-[1400px]`} style={{ fontFamily: 'sans-serif' }}>
       <div className="text-center mb-8">
         <h1 className="text-4xl font-bold text-gray-800 mb-2">Schedule ({viewMode} View)</h1>
         <p className="text-lg text-gray-500">Week of {format(weekStart, 'MMMM d, yyyy')}</p>

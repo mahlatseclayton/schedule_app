@@ -11,6 +11,7 @@ function App() {
   const [events, setEvents] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [viewMode, setViewMode] = useState('Combined'); // Combined, Work, School
+  const [printTheme, setPrintTheme] = useState('Soft Gray');
   const [isDownloading, setIsDownloading] = useState(false);
   const todayRef = useRef(null);
   const printRef = useRef(null);
@@ -136,13 +137,25 @@ function App() {
             <Plus size={20} /> Add Event
           </button>
           
-          <button 
-            onClick={handleDownload}
-            disabled={isDownloading}
-            className="bg-dark-700 hover:bg-dark-600 text-gray-200 py-3 px-4 rounded-xl transition-all font-medium flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <Download size={20} /> {isDownloading ? 'Generating Image...' : 'Download Timetable'}
-          </button>
+          <div className="flex flex-col gap-2 p-3 bg-dark-900 rounded-xl border border-dark-700 mt-2">
+            <label className="text-xs text-gray-400 font-semibold uppercase tracking-wider">Print Theme</label>
+            <select 
+              value={printTheme} 
+              onChange={e => setPrintTheme(e.target.value)}
+              className="bg-dark-800 border border-dark-700 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary-500"
+            >
+              <option value="White">White</option>
+              <option value="Soft Gray">Soft Gray</option>
+              <option value="Warm Sand">Warm Sand</option>
+            </select>
+            <button 
+              onClick={handleDownload}
+              disabled={isDownloading}
+              className="bg-dark-700 hover:bg-dark-600 text-gray-200 py-3 px-4 rounded-lg transition-all font-medium flex items-center justify-center gap-2 mt-1 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Download size={18} /> {isDownloading ? 'Generating Image...' : 'Download Timetable'}
+            </button>
+          </div>
         </div>
 
       </aside>
@@ -324,6 +337,7 @@ function App() {
           })} 
           weekStart={weekStart} 
           viewMode={viewMode}
+          theme={printTheme}
         />
       </div>
 
