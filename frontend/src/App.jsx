@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { format, addDays, startOfWeek, isBefore, isSameDay, parseISO } from 'date-fns';
-import { ChevronLeft, ChevronRight, Plus, Clock, BookOpen, Briefcase, Trash2, Bell, Filter } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Plus, Clock, BookOpen, Briefcase, Trash2, Bell, Filter, Download } from 'lucide-react';
+import html2canvas from 'html2canvas';
+import PrintableTimetable from './PrintableTimetable';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api/events';
 
@@ -9,10 +11,34 @@ function App() {
   const [events, setEvents] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [viewMode, setViewMode] = useState('Combined'); // Combined, Work, School
+  const [isDownloading, setIsDownloading] = useState(false);
   const todayRef = useRef(null);
+  const printRef = useRef(null);
   
   // Week tracking
   const [currentDate, setCurrentDate] = useState(new Date());
+
+  const handleDownload = async () => {
+    if (!printRef.current) return;
+    setIsDownloading(true);
+    try {
+      const canvas = await html2canvas(printRef.current, {
+        scale: 2, // High quality
+        useCORS: true,
+        backgroundColor: '#ffffff'
+      });
+      const dataUrl = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.download = `Schedule_${viewMode}_WeekOf_${format(weekStart, 'yyyy-MM-dd')}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error("Failed to generate image", err);
+      alert("Failed to download timetable.");
+    } finally {
+      setIsDownloading(false);
+    }
+  };
   // Start week on Monday (1) or Sunday (0). Assuming Monday for schedule.
   const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
   
@@ -104,12 +130,22 @@ function App() {
           <p className="text-gray-400 text-sm mt-1">Manage your time</p>
         </div>
 
-        <button 
-          onClick={() => setIsModalOpen(true)}
-          className="bg-primary-600 hover:bg-primary-500 text-white py-3 px-4 rounded-xl shadow-lg shadow-primary-500/20 transition-all font-medium flex items-center justify-center gap-2"
-        >
-          <Plus size={20} /> Add Event
-        </button>
+        <div className="flex flex-col gap-3">
+          <button 
+            onClick={() => setIsModalOpen(true)}
+            className="bg-primary-600 hover:bg-primary-500 text-white py-3 px-4 rounded-xl shadow-lg shadow-primary-500/20 transition-all font-medium flex items-center justify-center gap-2"
+          >
+            <Plus size={20} /> Add Event
+          </button>
+          
+          <button 
+            onClick={handleDownload}
+            disabled={isDownloading}
+            className="bg-dark-700 hover:bg-dark-600 text-gray-200 py-3 px-4 rounded-xl transition-all font-medium flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <Download size={20} /> {isDownloading ? 'Generating Image...' : 'Download Timetable'}
+          </button>
+        </div>
 
       </aside>
 
@@ -278,6 +314,21 @@ function App() {
           </div>
         </div>
       )}
+
+      {/* Hidden container for the printable version */}
+      <div style={{ position: 'absolute', left: '-9999px', top: '-9999px', opacity: 0 }}>
+        <PrintableTimetable 
+          ref={printRef}
+          events={events.filter(e => {
+            if (viewMode === 'Work') return e.type === 'Work';
+            if (viewMode === 'School') return e.type === 'Lecture' || e.type === 'Lab' || e.type === 'Study';
+            return true; // Combined
+          })} 
+          weekStart={weekStart} 
+          viewMode={viewMode}
+        />
+      </div>
+
     </div>
   );
 }
