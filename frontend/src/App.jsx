@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { format, addDays, startOfWeek, isBefore, isSameDay, parseISO } from 'date-fns';
 import { ChevronLeft, ChevronRight, Plus, Clock, BookOpen, Briefcase, Trash2, Bell, Filter, Download } from 'lucide-react';
-import html2canvas from 'html2canvas';
+import * as htmlToImage from 'html-to-image';
 import PrintableTimetable from './PrintableTimetable';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api/events';
@@ -22,12 +22,10 @@ function App() {
     if (!printRef.current) return;
     setIsDownloading(true);
     try {
-      const canvas = await html2canvas(printRef.current, {
-        scale: 2, // High quality
-        useCORS: true,
+      const dataUrl = await htmlToImage.toPng(printRef.current, {
+        pixelRatio: 2,
         backgroundColor: '#ffffff'
       });
-      const dataUrl = canvas.toDataURL('image/png');
       const link = document.createElement('a');
       link.download = `Schedule_${viewMode}_WeekOf_${format(weekStart, 'yyyy-MM-dd')}.png`;
       link.href = dataUrl;
