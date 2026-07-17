@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@theme {
+  --color-dark-900: #0A0A0A;
+  --color-dark-800: #1A1A1A;
+  --color-dark-700: #2A2A2A;
+  --color-primary-400: #60A5FA;
+  --color-primary-500: #3B82F6;
+  --color-primary-600: #2563EB;
+}
+
+@layer base {
+  body {
+    @apply bg-dark-900 text-white font-sans antialiased;
+  }
+  ::selection {
+    @apply bg-primary-500 text-white;
+  }
+}
